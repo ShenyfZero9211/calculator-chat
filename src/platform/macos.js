@@ -4,7 +4,7 @@ const LAUNCH_DELAY_MS = 500;
 const TYPING_DELAY_SEC = 0.3;
 
 function escapeAppleScript(str) {
-  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/'/g, '\\\'');
 }
 
 function sleep(ms) {
@@ -12,12 +12,8 @@ function sleep(ms) {
 }
 
 async function launchCalculator() {
-  try {
-    execSync('open -a Calculator', { stdio: 'ignore' });
-    await sleep(LAUNCH_DELAY_MS);
-  } catch (error) {
-    throw error;
-  }
+  execSync('open -a Calculator', { stdio: 'ignore' });
+  await sleep(LAUNCH_DELAY_MS);
 }
 
 async function typeNumber(number) {
@@ -37,11 +33,7 @@ async function typeNumber(number) {
     end tell
   `;
   
-  try {
-    execSync(`osascript -e '${script}'`, { stdio: ['ignore', 'ignore', 'pipe'] });
-  } catch (error) {
-    throw error;
-  }
+  execSync(`osascript -e '${script}'`, { stdio: ['ignore', 'ignore', 'pipe'] });
 }
 
 module.exports = { launchCalculator, typeNumber };
