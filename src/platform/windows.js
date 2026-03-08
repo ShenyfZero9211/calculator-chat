@@ -1,17 +1,8 @@
 const { execSync } = require('child_process');
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+const fs = require('fs');
+const path = require('path');
 
 async function launchCalculator() {
-  try {
-    execSync('start calc.exe', { shell: 'cmd.exe' });
-    await sleep(1000);
-  } catch (error) {
-    console.error('Failed to launch calculator:', error.message);
-    throw error;
-  }
 }
 
 async function typeNumber(number) {
@@ -19,11 +10,14 @@ async function typeNumber(number) {
     throw new Error('Number parameter is required');
   }
 
-  const maxRetries = 3;
+  const scriptPath = path.join(__dirname, '..', '..', 'temp_calc.ps1');
+  const psScript = `
+param($Num)
 
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const psScript = `
+Start-Process calc.exe
+Start-Sleep -Seconds 3
+
+Add-Type -AssemblyName System.Windows.Forms
 Add-Type @"
 using System;
 using System.Runtime.InteropServices;
@@ -31,40 +25,41 @@ public class Win32 {
     [DllImport("user32.dll")]
     public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
     [DllImport("user32.dll")]
-    public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
-    [DllImport("user32.dll")]
-    public static extern int PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
 }
 "@
-$calc = Start-Process calc.exe -PassThru
-Start-Sleep -Milliseconds 500
-$hwnd = $calc.MainWindowHandle
+
+$hwnd = [Win32]::FindWindow("ApplicationFrameWindow", "Calculator")
 if ($hwnd -eq [IntPtr]::Zero) {
-    Start-Sleep -Milliseconds 1000
-    $hwnd = $calc.MainWindowHandle
+    $hwnd = [Win32]::FindWindow("CalcFrame", "Calculator")
 }
 if ($hwnd -eq [IntPtr]::Zero) {
-    Start-Sleep -Milliseconds 1000
-    $hwnd = $calc.MainWindowHandle
+    $hwnd = [Win32]::FindWindow($null, "Calculator")
 }
-$chars = $args[0].ToCharArray()
-foreach ($c in $chars) {
-    # WM_KEYDOWN = 0x0100
-    [Win32]::PostMessage($hwnd, 0x0100, [int][char]$c, 0) | Out-Null
-    Start-Sleep -Milliseconds 50
+
+if ($hwnd -ne [IntPtr]::Zero) {
+    [Win32]::SetForegroundWindow($hwnd) | Out-Null
+    Start-Sleep -Milliseconds 300
+    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+    Start-Sleep -Milliseconds 100
+    [System.Windows.Forms.SendKeys]::SendWait($Num)
+} else {
+    Write-Host "Calculator not found"
 }
 `;
-      const escapedNumber = number.toString().replace(/"/g, '\\"');
-      execSync(`powershell -Command "${psScript}" -ArgumentList "${escapedNumber}"`, { 
-        stdio: ['ignore', 'ignore', 'pipe']
-      });
-      break;
-    } catch (error) {
-      if (attempt === maxRetries - 1) {
-        console.error('Failed to type number:', error.message);
-        throw error;
-      }
-      await sleep(500);
+
+  fs.writeFileSync(scriptPath, psScript, 'utf8');
+  
+  try {
+    execSync(`powershell -ExecutionPolicy Bypass -File "${scriptPath}" -Num "${number}"`, { 
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+  } catch (error) {
+    throw error;
+  } finally {
+    if (fs.existsSync(scriptPath)) {
+      fs.unlinkSync(scriptPath);
     }
   }
 }
