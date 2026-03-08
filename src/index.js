@@ -18,14 +18,23 @@ function getPlatform() {
 }
 
 function textToNumber(text) {
-  const lower = text.toLowerCase();
-  if (mapping[lower] || mapping[text]) {
-    return mapping[lower] || mapping[text];
+  const trimmed = text.trim();
+  
+  // If input is already numeric, use directly
+  if (/^\d+$/.test(trimmed)) {
+    return trimmed;
   }
-  // Unicode sum fallback
+  
+  // Check mapping
+  const lower = trimmed.toLowerCase();
+  if (mapping[lower] || mapping[trimmed]) {
+    return mapping[lower] || mapping[trimmed];
+  }
+  
+  // Unicode sum fallback (for non-numeric text)
   let sum = 0;
-  for (let i = 0; i < text.length; i++) {
-    sum += text.charCodeAt(i);
+  for (let i = 0; i < trimmed.length; i++) {
+    sum += trimmed.charCodeAt(i);
   }
   return sum.toString();
 }
