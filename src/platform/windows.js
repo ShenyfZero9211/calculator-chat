@@ -13,7 +13,7 @@ async function launchCalculator() {
 }
 
 async function typeNumber(number) {
-  if (number === undefined || number === null || number === '') {
+  if (!number) {
     throw new Error('Number parameter is required');
   }
 
@@ -22,17 +22,18 @@ async function typeNumber(number) {
   const psScript = `
 param($Num)
 
-# Check if Calculator is running
+Add-Type -AssemblyName System.Windows.Forms
+
+# Step 1: Check if Calculator is running
 $calc = Get-Process -Name "CalculatorApp" -ErrorAction SilentlyContinue
 
+# Step 2: If not running, start it
 if (-not $calc) {
-    # Calculator not running, start it
-    Start-Process calc.exe
+    Start-Process calc.exe -WindowStyle Normal
     Start-Sleep -Seconds 3
 }
 
-# Now find and activate Calculator window
-Add-Type -AssemblyName System.Windows.Forms
+# Step 3: Find and activate Calculator window
 Add-Type @"
 using System;
 using System.Runtime.InteropServices;
@@ -46,7 +47,6 @@ public class Win32 {
 }
 "@
 
-# Find calculator window
 $hwnd = [Win32]::FindWindow("ApplicationFrameWindow", "Calculator")
 if ($hwnd -eq [IntPtr]::Zero) {
     $hwnd = [Win32]::FindWindow("CalcFrame", "Calculator")
@@ -55,20 +55,21 @@ if ($hwnd -eq [IntPtr]::Zero) {
     $hwnd = [Win32]::FindWindow($null, "Calculator")
 }
 
+# Step 4: Activate to foreground
 if ($hwnd -ne [IntPtr]::Zero) {
-    # Ensure window is visible and activated
-    [Win32]::ShowWindow($hwnd, 1) | Out-Null  # SW_SHOW = 1
+    [Win32]::ShowWindow($hwnd, 9) | Out-Null
     Start-Sleep -Milliseconds 100
     [Win32]::SetForegroundWindow($hwnd) | Out-Null
-    Start-Sleep -Milliseconds 200
-    
-    # Clear and type directly
-    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
-    Start-Sleep -Milliseconds 100
-    [System.Windows.Forms.SendKeys]::SendWait($Num)
-} else {
-    Write-Host "Calculator not found"
+    Start-Sleep -Milliseconds 300
 }
+
+# Step 5: Send number
+$shell = New-Object -ComObject WScript.Shell
+$shell.AppActivate("Calculator")
+Start-Sleep -Milliseconds 200
+$shell.SendKeys("{ESC}")
+Start-Sleep -Milliseconds 100
+$shell.SendKeys($Num)
 `;
 
   fs.writeFileSync(scriptPath, psScript, 'utf8');
