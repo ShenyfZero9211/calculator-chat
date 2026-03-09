@@ -8,7 +8,7 @@ English | [中文](README_CN.md)
 
 ## What is Calculator Chat?
 
-Calculator Chat is a universal CLI tool that allows any AI Agent to display numbers on the system calculator instead of traditional text responses.
+Calculator Chat is a **universal CLI tool** that works with **any AI agent** (Claude, GPT, Cursor, Windsurf, Devin, or any AI assistant) to display numbers on the system calculator instead of traditional text responses.
 
 This creates a unique and interesting AI interaction:
 
@@ -17,7 +17,7 @@ This creates a unique and interesting AI interaction:
 - AI displays number code on calculator
 
 ```
-User: /calc I like you
+User: I like you
 AI: (shows 520 on calculator)
 ```
 
@@ -132,19 +132,10 @@ function sendToCalculator(number) {
 sendToCalculator('520');
 ```
 
-### Claude / OpenAI Agent
+### Any AI Agent (Claude, GPT, Cursor, Windsurf, Devin, etc.)
 
 ```bash
-# In Tool/Function call
-shell: calc-chat "520"
-```
-
-### Custom AI Platform
-
-Any AI that can execute shell commands:
-
-```bash
-# Just run this command
+# Just execute this command
 calc-chat "520"
 ```
 
@@ -228,9 +219,3 @@ MIT License
 ## Contributing
 
 Issues and Pull Requests are welcome!
-
----
-
-## Related Projects
-
-- [opencode](https://opencode.ai) - AI Programming Assistant
