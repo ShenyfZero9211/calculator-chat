@@ -1,111 +1,111 @@
 # Calculator Chat
 
-让 AI 通过系统计算器显示数字来与用户交流的通用工具。
+A universal CLI tool that allows any AI agent to display numbers on the system calculator.
 
-[English](README_EN.md) | 中文
-
----
-
-## 什么是 Calculator Chat？
-
-Calculator Chat 是一个通用的 CLI 工具，允许任何 AI Agent 在系统计算器上显示数字，而不是传统的文字回复。
-
-这创造了一种独特有趣的 AI 交互方式：
-
-- 用户对 AI 说话
-- AI 思考回应内容
-- AI 在计算器上显示数字代码
-
-```
-用户: /calc 我喜欢你
-AI: (在计算器上显示 520)
-```
+English | [中文](README_CN.md)
 
 ---
 
-## 快速开始
+## What is Calculator Chat?
 
-### 安装
+Calculator Chat is a universal CLI tool that allows any AI Agent to display numbers on the system calculator instead of traditional text responses.
+
+This creates a unique and interesting AI interaction:
+
+- User speaks to AI
+- AI thinks of a response
+- AI displays number code on calculator
+
+```
+User: /calc I like you
+AI: (shows 520 on calculator)
+```
+
+---
+
+## Quick Start
+
+### Installation
 
 ```bash
 npm install -g calculator-chat
 ```
 
-或直接安装 GitHub 版本：
+Or install directly from GitHub:
 
 ```bash
 npm install -g https://github.com/ShenyfZero9211/calculator-chat.git
 ```
 
-### 使用
+### Usage
 
 ```bash
 calc-chat "520"
 ```
 
-这会在计算器上显示 **520**。
+This will display **520** on the calculator.
 
 ---
 
-## 使用场景
+## Use Cases
 
-### 1. 谐音数字代码
+### 1. Homophone Number Codes
 
-| 用户消息 | AI 回复 | 含义 |
-|---------|--------|------|
-| 我需要你的帮助 | 995 | 救救我 |
-| 祝你平安 | 88 | 拜拜 |
-| 好累啊 | 555 | 呜呜呜 |
-| 财源广进 | 888 | 发发发 |
-| 想你 | 537 | 我想你 |
-| 嫁给我 | 1314520 | 一生一世我爱你 |
+| User Message | AI Response | Meaning |
+|--------------|-------------|---------|
+| I need your help | 995 | Save me |
+| Wish you peace | 88 | Bye bye |
+| So tired | 555 | Cry cry cry |
+| Fortune comes | 888 | Rich rich rich |
+| Miss you | 537 | I miss you |
+| Marry me | 1314520 | I love you forever |
 
-### 2. 数字解读
+### 2. Number Interpretation
 
-如果用户发送数字，AI 应该解读其含义：
+If user sends a number, AI should interpret its meaning:
 
-| 用户发送 | AI 解读 | 回应 |
-|---------|--------|------|
-| 520 | 我爱你 | 1314 (一生一世) |
-| 1314 | 一生一世 | 520 (我爱你) |
-| 666 | 很厉害 | 888 (祝贺) |
+| User Sends | AI Interprets | Response |
+|------------|---------------|----------|
+| 520 | I love you | 1314 (forever) |
+| 1314 | Forever | 520 (I love you) |
+| 666 | Awesome | 888 (congrats) |
 
-### 3. 情感表达
+### 3. Emotional Expression
 
-| 场景 | 建议回复 |
-|------|---------|
-| 表达爱意 | 520, 1314, 3344 |
-| 说再见 | 88, 007 |
-| 需要帮助 | 995, 110 |
-| 生日快乐 | 218, 888 |
+| Scenario | Suggested Response |
+|----------|-------------------|
+| Express love | 520, 1314, 3344 |
+| Say goodbye | 88, 007 |
+| Need help | 995, 110 |
+| Happy birthday | 218, 888 |
 
 ---
 
-## 技术原理
+## How It Works
 
-### 工作流程
+### Workflow
 
 ```
-1. 检查计算器是否运行
+1. Check if calculator is running
        ↓
-2. 如果没有，启动计算器
+2. If not, start calculator
        ↓
-3. 激活计算器窗口到前台
+3. Activate calculator window to foreground
        ↓
-4. 发送数字按键
+4. Send number keys
 ```
 
-### 平台支持
+### Platform Support
 
-| 操作系统 | 计算器 | 实现方式 |
-|---------|--------|---------|
-| Windows | Calculator (应用商店版) | PowerShell + SendKeys |
+| OS | Calculator | Implementation |
+|----|------------|----------------|
+| Windows | Calculator (Store app) | PowerShell + SendKeys |
 | macOS | Calculator.app | AppleScript |
 | Linux | gnome-calculator | xdotool |
 
 ---
 
-## 与 AI Agent 集成
+## Integration with AI Agents
 
 ### Python Agent
 
@@ -115,7 +115,7 @@ import subprocess
 def send_to_calculator(number: str):
     subprocess.run(["calc-chat", number], check=True)
 
-# 使用
+# Usage
 send_to_calculator("520")
 ```
 
@@ -128,56 +128,56 @@ function sendToCalculator(number) {
     execSync(`calc-chat "${number}"`);
 }
 
-// 使用
+// Usage
 sendToCalculator('520');
 ```
 
 ### Claude / OpenAI Agent
 
 ```bash
-# 在 Tool/Function 中调用
+# In Tool/Function call
 shell: calc-chat "520"
 ```
 
-### 自定义 AI 平台
+### Custom AI Platform
 
-任何能执行 shell 命令的 AI 都可以使用：
+Any AI that can execute shell commands:
 
 ```bash
-# 只需要执行这个命令
+# Just run this command
 calc-chat "520"
 ```
 
 ---
 
-## 故障排除
+## Troubleshooting
 
 ### Windows
 
-**问题**: 数字没有显示
+**Problem**: Numbers not displaying
 
-**解决方案**:
-1. 确保计算器是 Windows Store 版本（CalculatorApp）
-2. 以管理员权限运行终端
+**Solution**:
+1. Ensure calculator is Windows Store version (CalculatorApp)
+2. Run terminal as Administrator
 
-**问题**: 权限被拒绝
+**Problem**: Permission denied
 
 ```bash
-# 以管理员身份打开 PowerShell
+# Run PowerShell as Administrator
 powershell -Command "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned"
 ```
 
 ### macOS
 
-**问题**: 需要辅助功能权限
+**Problem**: Need Accessibility permission
 
-**解决方案**:
-1. 打开系统设置 → 隐私与安全性 → 辅助功能
-2. 添加 Terminal 或允许的应用程序
+**Solution**:
+1. Open System Settings → Privacy & Security → Accessibility
+2. Add Terminal or allowed app
 
 ### Linux
 
-**问题**: xdotool 未安装
+**Problem**: xdotool not installed
 
 ```bash
 # Ubuntu/Debian
@@ -192,25 +192,25 @@ sudo pacman -S xdotool
 
 ---
 
-## 开发
+## Development
 
-### 本地开发
+### Local Development
 
 ```bash
-# 克隆项目
+# Clone project
 git clone https://github.com/ShenyfZero9211/calculator-chat.git
 cd calculator-chat
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 测试
+# Test
 npm test
-# 或
+# or
 node src/index.js "520"
 ```
 
-### 发布新版本
+### Publish New Version
 
 ```bash
 npm version patch
@@ -219,18 +219,18 @@ npm publish
 
 ---
 
-## 许可证
+## License
 
 MIT License
 
 ---
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request！
+Issues and Pull Requests are welcome!
 
 ---
 
-## 相关项目
+## Related Projects
 
-- [opencode](https://opencode.ai) - AI 编程助手
+- [opencode](https://opencode.ai) - AI Programming Assistant
