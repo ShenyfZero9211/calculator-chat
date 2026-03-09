@@ -2,6 +2,8 @@
 
 A universal CLI tool that allows any AI agent to display numbers on the system calculator.
 
+English | [中文](README.md)
+
 ---
 
 ## What is Calculator Chat?

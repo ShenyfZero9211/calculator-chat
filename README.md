@@ -2,7 +2,7 @@
 
 让 AI 通过系统计算器显示数字来与用户交流的通用工具。
 
-[English](README.md) | [中文](README_CN.md)
+[English](README_EN.md) | 中文
 
 ---
 
