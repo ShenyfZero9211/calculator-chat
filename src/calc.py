@@ -8,6 +8,7 @@ import sys
 import subprocess
 import platform
 import argparse
+import os
 
 # 数字映射表
 NUMBER_PATTERNS = {
@@ -72,6 +73,16 @@ def get_platform():
 
 def open_linux(number, verbose=False):
     """Linux: 使用 gnome-calculator"""
+    # 检查并关闭现有计算器进程
+    try:
+        result = subprocess.run(['pgrep', '-f', 'gnome-calculator'], 
+                             capture_output=True, text=True, timeout=2)
+        if result.stdout.strip():
+            pid = result.stdout.strip().split()[0]
+            os.kill(int(pid), 15)  # 发送 SIGTERM
+    except:
+        pass
+    
     subprocess.Popen(['gnome-calculator', '--equation', number],
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return True
