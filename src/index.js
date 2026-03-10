@@ -84,12 +84,13 @@ function parseExpression(message) {
   return '88';
 }
 
-// Linux: 使用 gnome-calculator
+// Linux: 使用 gnome-calculator (--equation 会直接显示数字)
 function openLinuxCalculator(number) {
   try {
     execSync('pkill -f gnome-calculator', { stdio: 'ignore' });
   } catch (e) {}
   
+  // 使用 --equation 直接在计算器上显示数字
   spawn('gnome-calculator', ['--equation', number], {
     detached: true,
     stdio: 'ignore'
@@ -101,10 +102,11 @@ function openLinuxCalculator(number) {
 // Windows: 使用 PowerShell 打开计算器并输入
 function openWindowsCalculator(number) {
   try {
-    const ps = `Start-Process calc; Start-Sleep 1; Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait('${number}')`;
+    // 先打开计算器并激活到前台，然后输入数字
+    const ps = `Start-Process calc; Start-Sleep 1; Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait('${number}'); [System.Windows.Forms.SendKeys]::SendWait('~')`;
     execSync(`powershell -Command "${ps}"`, {
       stdio: 'ignore',
-      windowsHide: true
+      windowsHide: false
     });
     return true;
   } catch (e) {
@@ -116,7 +118,8 @@ function openWindowsCalculator(number) {
 // macOS: 使用 AppleScript 打开计算器并输入
 function openMacOSCalculator(number) {
   try {
-    const script = `tell app "Calculator" to activate; delay 0.5; tell app "System Events" to keystroke "${number}"`;
+    // 激活计算器到前台，然后输入数字
+    const script = `tell app "Calculator" to activate; delay 0.8; tell app "System Events" to keystroke "${number}"; keystroke return`;
     execSync(`osascript -e '${script}'`, { stdio: 'ignore' });
     return true;
   } catch (e) {
