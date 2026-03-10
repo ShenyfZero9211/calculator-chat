@@ -71,6 +71,8 @@ def get_platform():
     """获取平台"""
     return platform.system().lower()
 
+import time
+
 def open_linux(number, verbose=False):
     """Linux: 使用 gnome-calculator"""
     # 检查并关闭现有计算器进程
@@ -78,8 +80,12 @@ def open_linux(number, verbose=False):
         result = subprocess.run(['pgrep', '-f', 'gnome-calculator'], 
                              capture_output=True, text=True, timeout=2)
         if result.stdout.strip():
-            pid = result.stdout.strip().split()[0]
-            os.kill(int(pid), 15)  # 发送 SIGTERM
+            pid = int(result.stdout.strip().split()[0])
+            try:
+                os.kill(pid, 15)  # SIGTERM
+                time.sleep(0.3)  # 等待进程退出
+            except:
+                pass
     except:
         pass
     
