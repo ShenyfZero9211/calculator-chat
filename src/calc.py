@@ -7,6 +7,7 @@ Calculator Chat - 纯 Python 版本
 import sys
 import subprocess
 import platform
+import argparse
 
 # 数字映射表
 NUMBER_PATTERNS = {
@@ -54,12 +55,10 @@ def parse_expression(message):
     """解析消息为数字"""
     msg = message.lower()
     
-    # 匹配模式
     for pattern, result in NUMBER_PATTERNS.items():
         if pattern.lower() in msg:
             return result
     
-    # 提取数字
     import re
     numbers = re.findall(r'\d+', message)
     if numbers:
@@ -71,7 +70,7 @@ def get_platform():
     """获取平台"""
     return platform.system().lower()
 
-def open_linux(number):
+def open_linux(number, verbose=False):
     """Linux: 使用 gnome-calculator"""
     try:
         subprocess.run(['pkill', '-f', 'gnome-calculator'], 
@@ -83,50 +82,68 @@ def open_linux(number):
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return True
 
-def open_windows(number):
+def open_windows(number, verbose=False):
     """Windows: 使用 PowerShell"""
     try:
         ps = f'Start-Process calc; Start-Sleep 1; Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait("{number}"); [System.Windows.Forms.SendKeys]::SendWait("~")'
-        subprocess.run(['powershell', '-Command', ps], 
-                      capture_output=True, timeout=10)
-        return True
+        result = subprocess.run(['powershell', '-Command', ps], 
+                              capture_output=True, timeout=10)
+        return result.returncode == 0
     except Exception as e:
-        print(f'Windows error: {e}')
+        if verbose:
+            print(f'Windows error: {e}')
         return False
 
-def open_macos(number):
+def open_macos(number, verbose=False):
     """macOS: 使用 AppleScript"""
     try:
         script = f'tell app "Calculator" to activate; delay 0.8; tell app "System Events" to keystroke "{number}"; keystroke return'
-        subprocess.run(['osascript', '-e', script], 
-                      capture_output=True, timeout=10)
-        return True
+        result = subprocess.run(['osascript', '-e', script], 
+                              capture_output=True, timeout=10)
+        return result.returncode == 0
     except Exception as e:
-        print(f'macOS error: {e}')
+        if verbose:
+            print(f'macOS error: {e}')
         return False
 
 def main():
-    message = ' '.join(sys.argv[1:]) or '520'
-    plat = get_platform()
+    parser = argparse.ArgumentParser(description='Calculator Chat')
+    parser.add_argument('message', nargs='*', help='要转换的消息')
+    parser.add_argument('-v', '--verbose', action='store_true', help='显示详细信息')
+    args = parser.parse_args()
     
-    print(f'💬 你说: "{message}"')
-    print(f'🖥️ 平台: {plat}')
+    message = ' '.join(args.message) if args.message else '520'
+    plat = get_platform()
+    verbose = args.verbose
+    
+    if verbose:
+        print(f'💬 你说: "{message}"')
+        print(f'🖥️ 平台: {plat}')
     
     number = parse_expression(message)
-    print(f'🔢 数字: {number}')
+    
+    if verbose:
+        print(f'🔢 数字: {number}')
     
     success = False
+    
     if plat == 'linux':
-        success = open_linux(number)
+        success = open_linux(number, verbose)
     elif plat == 'windows':
-        success = open_windows(number)
+        success = open_windows(number, verbose)
     elif plat == 'darwin':
-        success = open_macos(number)
+        success = open_macos(number, verbose)
+    else:
+        if not verbose:
+            print(f"❌ 不支持的平台: {plat}")
     
     if success:
-        print('✅ 完成！查看计算器！')
+        if verbose:
+            print('✅ 完成！')
+        # 成功时不输出，让用户直接看计算器
     else:
-        print('❌ 打开失败')
+        if not verbose:
+            print("❌ 无法打开计算器")
 
 if __name__ == '__main__':
     main()
