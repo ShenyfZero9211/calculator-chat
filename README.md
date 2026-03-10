@@ -75,9 +75,8 @@ calc-chat "520+888"
 
 ## Requirements
 
-- Node.js 14+
-- Python 3
-- gnome-calculator (Linux)
+- Python 3 (跨平台，无需 Node.js)
+- 系统计算器 (各平台自带)
 
 ## OpenClaw Integration
 

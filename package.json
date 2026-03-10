@@ -2,13 +2,14 @@
   "name": "calculator-chat",
   "version": "2.0.0",
   "description": "AI agent skill - respond with numbers on system calculator",
-  "main": "src/index.js",
+  "main": "src/calc.py",
   "bin": {
-    "calc-chat": "src/index.js"
+    "calc-chat": "src/calc.py"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "test": "node src/index.js \"我爱你\""
+    "start": "python3 src/calc.py",
+    "start:node": "node src/index.js",
+    "test": "python3 src/calc.py \"我爱你\""
   },
   "keywords": [
     "ai",
@@ -29,6 +30,6 @@
     "url": "https://github.com/ShenyfZero9211/calculator-chat/issues"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "python": ">=3.6"
   }
 }

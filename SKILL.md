@@ -6,7 +6,7 @@ metadata:
     "openclaw": {
       "emoji": "🧮",
       "requires": {
-        "bins": ["node"]
+        "bins": ["python3"]
       }
     }
   }
@@ -50,5 +50,5 @@ calc-chat "恭喜发财"
 
 ## 依赖
 
-- Node.js 14+
+- Python 3
 - 系统计算器 (各平台自带)
