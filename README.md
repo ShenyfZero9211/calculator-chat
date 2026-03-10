@@ -70,8 +70,8 @@ calc-chat "520+888"
 ### Supported Platforms
 
 - **Linux** (Ubuntu/GNOME) - gnome-calculator
-- **macOS** - Calculator.app (coming soon)
-- **Windows** - Calculator (coming soon)
+- **macOS** - Calculator.app
+- **Windows** - Calculator (系统自带)
 
 ## Requirements
 

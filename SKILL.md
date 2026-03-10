@@ -1,72 +1,54 @@
 ---
 name: calculator-chat
-description: Use when user sends /calc <message> command to communicate via system calculator with AI-inferred number responses
+description: "OpenClaw skill: 用系统计算器数字回应用户。当用户发送 /calc-chat 或表达情感时，在系统计算器上显示对应数字（如 520=我爱你，88=再见）。支持中文谐音翻译。"
+metadata:
+  {
+    "openclaw": {
+      "emoji": "🧮",
+      "requires": {
+        "bins": ["node"]
+      }
+    }
+  }
 ---
 
-# Calculator Chat Skill
+# Calculator Chat 🧮
 
-## Overview
+OpenClaw skill - 用系统计算器数字回应用户
 
-This skill allows AI to respond to users by typing numbers/symbols into the system calculator instead of text. **The AI decides what number to output based on understanding the user's message.**
+## 功能
 
-## Trigger
+- 💬 自然语言理解
+- 🧮 系统计算器显示
+- 🌐 中文谐音支持
 
-When user sends a message starting with `/calc `:
-```
-/calc 我需要你的帮助
-/calc 祝你平安
-/calc 520
-```
+## 触发方式
 
-## AI Response Logic
+- `/calc-chat 我爱你`
+- `/calc-chat 再见`
+- 直接表达情感时自动触发
 
-The AI should **think and infer** the appropriate number response:
+## 翻译示例
 
-### 1. Chinese Homophones (谐音)
-| Message | Response | Reason |
-|---------|----------|--------|
-| 我需要你的帮助 | 995 | 救救我 |
-| 祝你平安 | 88 | 拜拜 |
-| 好累啊 | 555 | 呜呜呜 |
-| 气球 | 88 | 發發 |
-| 财源广进 | 888 | 發發發 |
-| 祝你顺利 | 66 | 顺顺 |
-| 想你想你想你 | 777 | 亲亲亲 |
+| 你说 | 计算器显示 | 含义 |
+|-----|-----------|------|
+| 我爱你 | 520 | 我爱你 |
+| 一生一世 | 1314 | 一生一世 |
+| 再见 / 拜拜 | 88 | 再见 |
+| 好累 / 哭 | 555 | 呜呜呜 |
+| 恭喜 / 发财 | 888 | 发发发 |
+| 帮我 / 救命 | 995 | 救救我 |
+| 想你 / 亲亲 | 777 | 亲亲亲 |
+| 顺利 / 加油 | 66 | 顺顺 |
 
-### 2. Number Understanding
-If user sends a number, interpret its meaning:
-- 520 → "我爱你" → respond with 1314 (一生一世)
-- 1314 → "一生一世" → respond with 520 (我爱你)
-- 666 → "666" (厉害) → respond with 888
-
-### 3. Context-Based Responses
-- User expresses love → 520, 1314, 3344 (生生世世)
-- User says goodbye → 88, 007 (OK)
-- User needs help → 995, 110
-- User says happy birthday → 218, 888
-
-### 4. Fallback
-If no clear inference, use Unicode sum.
-
-## Response Flow
-
-1. Extract message after `/calc ` prefix
-2. AI analyzes message and infers appropriate number/code
-3. Launch system calculator (platform-specific)
-4. Type the number code into calculator
-
-## Platform Commands
-
-| Platform | Launch | Type Keys |
-|----------|--------|-----------|
-| Windows | `start calc.exe` | PowerShell SendKeys |
-| macOS | `open -a Calculator` | AppleScript keystroke |
-| Linux | `gnome-calculator &` | xdotool |
-
-## Usage
+## 使用
 
 ```bash
-calc-chat "<number>"
+calc-chat "我爱你"
+calc-chat "恭喜发财"
 ```
 
-Example: `calc-chat "520"`
+## 依赖
+
+- Node.js 14+
+- 系统计算器 (各平台自带)
