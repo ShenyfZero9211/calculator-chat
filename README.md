@@ -1,5 +1,8 @@
 # Calculator Chat 🧮
 
+[![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
+[![中文](https://img.shields.io/badge/lang-中文-red.svg)](README_CN.md)
+
 An OpenClaw skill that responds with numbers on the system calculator. When users express emotions or use specific phrases, the AI translates them into numbers and displays them on the calculator.
 
 ## Features
