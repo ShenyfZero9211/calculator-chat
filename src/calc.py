@@ -72,12 +72,6 @@ def get_platform():
 
 def open_linux(number, verbose=False):
     """Linux: 使用 gnome-calculator"""
-    try:
-        subprocess.run(['pkill', '-f', 'gnome-calculator'], 
-                     capture_output=True, timeout=2)
-    except:
-        pass
-    
     subprocess.Popen(['gnome-calculator', '--equation', number],
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return True
